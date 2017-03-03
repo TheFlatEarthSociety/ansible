@@ -1,0 +1,94 @@
+#!/bin/sh
+
+die() {
+	echo >&2 "$@"
+	exit 1
+}
+
+parse_key() {
+	awk -F'[ ":]+' -v key="$1" '$2 == key {print $3; exit}'
+}
+
+# AWS
+name="$1"
+az="$2"
+keypair=steven
+type=t2.nano
+storage=2 # GiB
+storagetype=gp2
+
+# OpenBSD
+mirror=http://mirror.internode.on.net/pub/OpenBSD/
+release=6.0
+arch=amd64
+bootuser=parallax
+realuser="$keypair"
+python=python-2.7.12
+
+case "$az" in
+	*[0-9][a-z]) region="${az%[a-z]}" ;;
+	*) die "Invalid availability zone: $az" ;;
+esac
+
+case "$region" in
+	ap-southeast-2) ami=ami-9fbab9fc ;;
+	eu-central-1)   ami=ami-e764b188 ;;
+	*) die "No AMI for region: $region" ;;
+esac
+
+ec2="aws ec2 --profile tfes --region $region"
+
+set -e
+
+echo -n " » Creating a new instance in $az..."
+instance="$($ec2 run-instances --image-id "$ami" \
+	--placement "AvailabilityZone=$az" --key-name "$keypair" \
+	--instance-type "$type" \
+	--block-device-mappings "DeviceName=/dev/xvda,Ebs={VolumeSize=$storage,VolumeType=$storagetype}" | \
+	parse_key InstanceId)"
+echo "done ($instance)."
+
+echo -n " » Giving $instance the name '$name'..."
+$ec2 create-tags --resources "$instance" --tags Key=Name,Value="$name" >/dev/null
+echo "done."
+
+echo -n " » Waiting for IP address for $instance..."
+pubip=
+while [ -z "$pubip" ]; do
+	sleep 1
+	pubip="$($ec2 describe-instances --instance-ids "$instance" |
+		parse_key PublicIpAddress)"
+done
+echo "done ($pubip)."
+
+echo -n " » Waiting for SSH host key fingerprint for $instance..."
+# Be lazy. The OpenBSD installer will take a few minutes, and there's
+# no point scanning console output while the OS is installing.
+sleep 150
+fp=
+while [ -z "$fp" ]; do
+	sleep 1
+	fp="$($ec2 get-console-output --instance-id "$instance" |
+		perl -nle 'print $1 if /-----BEGIN SSH HOST KEY KEYS-----\\r\\n(ecdsa-sha2-nistp256 (\S+) root@[\w-.]+)\\r\\n.*-----END SSH HOST KEY KEYS-----/' |
+		ssh-keygen -vlf- 2>/dev/null || :)"
+done
+echo "done."
+
+echo
+echo "Expecting host key fingerprint: $fp"
+echo
+
+ssh -o VisualHostKey=yes -o FingerprintHash=sha256 \
+	-o HostbasedKeyTypes=ecdsa-sha2-nistp256 "$bootuser"@"$pubip" "
+		echo
+		echo -n ' » Installing Python...'
+		doas env PKG_PATH='$mirror$release/packages/$arch' \\
+			pkg_add '$python' >/dev/null
+"
+echo "done."
+
+echo " » Bootstrapping Ansible..."
+ansible-playbook -i "$pubip", -u "$bootuser" \
+	-b --become-method=doas --become-user=root \
+	-e "ansible_python_interpreter=/usr/local/bin/python2.7 user=$realuser" \
+	bootstrap.yml

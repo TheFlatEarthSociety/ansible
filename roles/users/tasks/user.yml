@@ -1,0 +1,22 @@
+---
+- name: Include user config
+  include_vars: user:{{username}}.yml
+
+- name: Manage group
+  group:
+    name: "{{username}}"
+    gid: "{{uid}}"
+
+- name: Manage user
+  user:
+    name: "{{username}}"
+    password: "*************"
+    uid: "{{uid}}"
+    group: "{{username}}"
+
+- name: authorized_keys
+  copy:
+    src: authorized_keys:{{username}}
+    dest: /home/{{username}}/.ssh/authorized_keys
+    owner: "{{username}}"
+    group: "{{username}}"
