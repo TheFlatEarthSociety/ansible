@@ -1,20 +1,28 @@
 ---
-- name: Include user config
+- name: Include user config for {{username}}
   include_vars: user:{{username}}.yml
 
-- name: Manage group
+- name: Manage group {{username}}
   group:
     name: "{{username}}"
     gid: "{{uid}}"
 
-- name: Manage user
+- name: Manage user {{username}}
   user:
     name: "{{username}}"
     password: "*************"
     uid: "{{uid}}"
     group: "{{username}}"
+    home: /home/{{username}}
 
-- name: authorized_keys
+- name: /home/{{username}}
+  file:
+    path: /home/{{username}}
+    owner: "{{username}}"
+    group: "{{username}}"
+    mode: 0750
+
+- name: /home/{{username}}/.ssh/authorized_keys
   copy:
     src: authorized_keys:{{username}}
     dest: /home/{{username}}/.ssh/authorized_keys

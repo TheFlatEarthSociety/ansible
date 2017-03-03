@@ -6,8 +6,9 @@
     owner: root
     group: wheel
     mode: 0444
-    validate: '/usr/sbin/sshd -tf %s'
+    validate: "/usr/sbin/sshd -tf %s"
   notify: Reload sshd
+
 - name: Enable sshd
   service:
     name: sshd

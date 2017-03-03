@@ -3,3 +3,19 @@
   package:
     name: ngircd
     state: present
+
+- name: /etc/ngircd/ngircd.conf
+  template:
+    src: ngircd.conf
+    dest: /etc/ngircd/ngircd.conf
+    owner: _ngircd
+    group: _ngircd
+    mode: 0400
+    validate: "ngircd -tf %s"
+  notify: Reload ngircd
+
+- name: Enable ngircd
+  service:
+    name: ngircd
+    state: started
+    enabled: yes

@@ -1,0 +1,5 @@
+---
+- name: Reload ngircd
+  service:
+    name: ngircd
+    state: reloaded
