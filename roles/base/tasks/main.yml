@@ -1,0 +1,34 @@
+---
+# Ensure root has no password.
+- name: Neuter root
+  user:
+    name: root
+    password: "*************"
+
+# Nuke the parallax AMI user and group.
+- name: Nuke parallax user
+  user:
+    name: parallax
+    state: absent
+    remove: yes
+- name: Nuke parallax group
+  group:
+    name: parallax
+    state: absent
+
+# Common files.
+- name: /etc/doas.conf
+  copy:
+    src: doas.conf
+    dest: /etc/doas.conf
+    owner: root
+    group: wheel
+    mode: 0444
+    validate: "doas -C %s"
+
+# Services unnecessary on servers.
+- name: Disable sndiod
+  service:
+    name: sndiod
+    state: stopped
+    enabled: no

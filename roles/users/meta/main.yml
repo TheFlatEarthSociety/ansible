@@ -1,0 +1,4 @@
+# This role MUST be kept free of dependencies. It is used when
+# bootstrapping a new host (see the "bootstrap" script and
+# "bootstrap.yml" playbook), which is supposed to do the bare minimum
+# required to start working as a non-"parallax" user.

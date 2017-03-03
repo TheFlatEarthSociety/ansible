@@ -1,0 +1,9 @@
+---
+- hosts: all
+  roles:
+  - role: base
+  - role: ssh
+  - role: users
+- hosts: irc
+  roles:
+  - role: ngircd

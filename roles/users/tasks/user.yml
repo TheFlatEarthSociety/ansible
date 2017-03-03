@@ -20,3 +20,4 @@
     dest: /home/{{username}}/.ssh/authorized_keys
     owner: "{{username}}"
     group: "{{username}}"
+    mode: 0400
