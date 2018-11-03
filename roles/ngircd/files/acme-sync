@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+umask 077
+
+tmpf="$(mktemp)"
+ssh -nTi /root/.ssh/id_rsa.acme palpatine.tfes.org >"$tmpf"
+
+cd /etc/ngircd/
+sed -n '/-----BEGIN PRIVATE KEY-----/q;p' "$tmpf" >server-cert.pem.new
+sed -n '/-----BEGIN PRIVATE KEY-----/,$p' "$tmpf" >server-key.pem.new
+rm -f "$tmpf"
+
+if cmp -s server-cert.pem server-cert.pem.new && \
+   cmp -s server-key.pem server-key.pem.new; then
+	# nothing to do
+	rm -f server-cert.pem.new server-key.pem.new
+	exit 0
+fi
+
+chmod 0444 server-cert.pem.new
+chmod 0440 server-key.pem.new
+
+[ ! -f server-cert.pem ] || mv -f server-cert.pem server-cert.pem.old
+mv server-cert.pem.new server-cert.pem
+
+[ ! -f server-key.pem ] || mv -f server-key.pem server-key.pem.old
+mv server-key.pem.new server-key.pem

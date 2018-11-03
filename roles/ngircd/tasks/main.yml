@@ -14,6 +14,27 @@
     validate: "ngircd -tf %s"
   notify: Reload ngircd
 
+- name: Install acme-sync
+  copy:
+    src: acme-sync
+    dest: /usr/local/sbin/acme-sync
+    owner: root
+    group: wheel
+    mode: 0500
+    validate: "sh -n %s"
+
+- name: Run acme-sync
+  command: acme-sync
+  args:
+    creates: /etc/ngircd/server-key.pem
+
+- name: Install acme-sync cron job
+  cron:
+    name: acme-sync
+    job: acme-sync
+    minute: 38
+    hour: 22
+
 - name: Enable ngircd
   service:
     name: ngircd
