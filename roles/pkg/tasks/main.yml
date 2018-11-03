@@ -1,8 +1,0 @@
----
-- name: /etc/pkg.conf
-  template:
-    src: pkg.conf
-    dest: /etc/pkg.conf
-    owner: root
-    group: wheel
-    mode: 0444
