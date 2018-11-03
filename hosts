@@ -1,8 +1,25 @@
+# The peering logic for this group is as follows:
+#
+#  1. There should be an intercontinental link between atl1 and lon1 (the
+#     nearest two peers from each region). It does not matter in which direction
+#     this is established, so we arbitrarily select atl1 -> lon1.
+#
+#  2. There should be an intracontinental link between each of (atl1, ord1) and
+#     (fra1, lon1). It is convenient to have this initiated from the peer
+#     uninvolved in the intercontinental link in (1), because of (3).
+#
+#  3. When atl1 or lon1 goes down, a new intercontinental link must be formed by
+#     the remaining peer on its continent to avoid a netsplit. This is achieved
+#     by having it fall back to the nearest peer on the other continent.
+#
+# This approach ensures that there are no cycles in the network, and that the
+# loss of any one node cannot result in a netsplit. However, some two-node
+# failure scenarios can still produce a netsplit.
 [irc]
-atl1.irc.tfes.org
-fra1.irc.tfes.org
+atl1.irc.tfes.org irc_peer=lon1.irc.tfes.org
+fra1.irc.tfes.org irc_peer=lon1.irc.tfes.org irc_fallback_peer=atl1.irc.tfes.org
 lon1.irc.tfes.org
-ord1.irc.tfes.org
+ord1.irc.tfes.org irc_peer=atl1.irc.tfes.org irc_fallback_peer=lon1.irc.tfes.org
 
 [all:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7
