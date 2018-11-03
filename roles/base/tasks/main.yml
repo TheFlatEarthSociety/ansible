@@ -1,21 +1,4 @@
 ---
-# Ensure root has no password.
-- name: Neuter root
-  user:
-    name: root
-    password: "*************"
-
-# Nuke the parallax AMI user and group.
-- name: Nuke parallax user
-  user:
-    name: parallax
-    state: absent
-    remove: yes
-- name: Nuke parallax group
-  group:
-    name: parallax
-    state: absent
-
 # Common files.
 - name: /etc/doas.conf
   copy:
