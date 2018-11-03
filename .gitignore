@@ -2,5 +2,5 @@
 *.swp
 *~
 
-# Our ircd config should not be in a public git repo
+# Our ircd passwords should not be in a public git repo
 /roles/ngircd/defaults/main.yml

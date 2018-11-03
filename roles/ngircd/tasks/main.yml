@@ -4,16 +4,6 @@
     name: ngircd
     state: present
 
-- name: /etc/ngircd/ngircd.conf
-  template:
-    src: ngircd.conf
-    dest: /etc/ngircd/ngircd.conf
-    owner: _ngircd
-    group: _ngircd
-    mode: 0400
-    validate: "ngircd -tf %s"
-  notify: Reload ngircd
-
 - name: Install acme-sync
   copy:
     src: acme-sync
@@ -27,6 +17,7 @@
   command: acme-sync
   args:
     creates: /etc/ngircd/server-key.pem
+  notify: Reload ngircd
 
 - name: Install acme-sync cron job
   cron:
@@ -34,6 +25,22 @@
     job: acme-sync
     minute: 38
     hour: 22
+
+- name: Create dhparams
+  command: openssl dhparam -out /etc/ngircd/dhparams.pem 2048
+  args:
+    creates: /etc/ngircd/dhparams.pem
+  notify: Reload ngircd
+
+- name: /etc/ngircd/ngircd.conf
+  template:
+    src: ngircd.conf
+    dest: /etc/ngircd/ngircd.conf
+    owner: _ngircd
+    group: _ngircd
+    mode: 0400
+    validate: "ngircd -tf %s"
+  notify: Reload ngircd
 
 - name: Enable ngircd
   service:
