@@ -22,7 +22,7 @@
 - name: Install acme-sync cron job
   cron:
     name: acme-sync
-    job: acme-sync
+    job: /usr/local/sbin/acme-sync
     minute: 38
     hour: 22
 
