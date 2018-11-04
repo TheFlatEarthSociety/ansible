@@ -13,6 +13,7 @@
     password: "*************"
     uid: "{{uid}}"
     group: "{{username}}"
+    groups: "{{user_groups}}"
     home: /home/{{username}}
 
 - name: /home/{{username}}

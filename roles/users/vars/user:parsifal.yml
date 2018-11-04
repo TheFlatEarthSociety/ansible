@@ -1,2 +1,4 @@
 ---
 uid: 2000
+user_groups:
+ - wheel
