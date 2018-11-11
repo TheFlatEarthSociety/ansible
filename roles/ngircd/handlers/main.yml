@@ -3,3 +3,8 @@
   service:
     name: ngircd
     state: reloaded
+
+- name: Reload relayd
+  service:
+    name: relayd
+    state: reloaded

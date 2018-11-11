@@ -1,0 +1,16 @@
+---
+- name: /etc/relayd.conf
+  copy:
+    src: relayd.conf
+    dest: /etc/relayd.conf
+    owner: root
+    group: wheel
+    mode: 0400
+    validate: "relayd -nf %s"
+  notify: Reload relayd
+
+- name: Enable relayd
+  service:
+    name: relayd
+    state: started
+    enabled: yes

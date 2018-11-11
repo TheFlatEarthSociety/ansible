@@ -1,0 +1,63 @@
+---
+- name: Install ngircd
+  package:
+    name: ngircd
+    state: present
+
+- name: Install sic
+  package:
+    name: sic
+    state: present
+
+- name: Install acme-sync
+  copy:
+    src: acme-sync
+    dest: /usr/local/sbin/acme-sync
+    owner: root
+    group: wheel
+    mode: 0500
+    validate: "sh -n %s"
+
+- name: Install check_irc_network
+  copy:
+    src: check_irc_network
+    dest: /usr/local/sbin/check_irc_network
+    owner: root
+    group: wheel
+    mode: 0555
+    validate: "sh -n %s"
+
+- name: Run acme-sync
+  command: acme-sync
+  args:
+    creates: /etc/ngircd/server-key.pem
+  notify: Reload ngircd
+
+- name: Install acme-sync cron job
+  cron:
+    name: acme-sync
+    job: /usr/local/sbin/acme-sync
+    minute: 38
+    hour: 22
+
+- name: Create dhparams
+  command: openssl dhparam -out /etc/ngircd/dhparams.pem 2048
+  args:
+    creates: /etc/ngircd/dhparams.pem
+  notify: Reload ngircd
+
+- name: /etc/ngircd/ngircd.conf
+  template:
+    src: ngircd.conf
+    dest: /etc/ngircd/ngircd.conf
+    owner: root
+    group: _ngircd
+    mode: 0440
+    validate: "ngircd -tf %s"
+  notify: Reload ngircd
+
+- name: Enable ngircd
+  service:
+    name: ngircd
+    state: started
+    enabled: yes
