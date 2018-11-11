@@ -1,0 +1,6 @@
+---
+- include: maintenance.yml
+  when: maintenance is defined
+
+- include: maintenance_cleanup.yml
+  when: maintenance is undefined

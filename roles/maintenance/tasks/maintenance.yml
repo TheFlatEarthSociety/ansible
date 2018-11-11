@@ -1,0 +1,17 @@
+---
+- name: Install maintenance script
+  copy:
+    src: maintenance
+    dest: /usr/local/sbin/maintenance
+    owner: root
+    group: wheel
+    mode: 0555
+    validate: "sh -n %s"
+
+- name: Install maintenance cron job
+  cron:
+    name: maintenance
+    job: /usr/local/sbin/maintenance
+    weekday: "{{ maintenance.day }}"
+    hour: "{{ maintenance.hour }}"
+    minute: 0

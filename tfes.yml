@@ -3,6 +3,7 @@
   roles:
   - role: base
   - role: mail
+  - role: maintenance
   - role: ssh
   - role: users
   environment:
