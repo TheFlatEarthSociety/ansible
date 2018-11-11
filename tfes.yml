@@ -4,6 +4,10 @@
   - role: base
   - role: ssh
   - role: users
+  environment:
+    PKG_PATH: "https://assets.tfes.org/openbsd/6.4/packages/amd64:https://stable.mtier.org/updates/6.4/amd64:installpath"
 - hosts: irc
   roles:
   - role: ngircd
+  environment:
+    PKG_PATH: "https://assets.tfes.org/openbsd/6.4/packages/amd64:https://stable.mtier.org/updates/6.4/amd64:installpath"

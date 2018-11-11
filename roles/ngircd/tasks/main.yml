@@ -4,6 +4,11 @@
     name: ngircd
     state: present
 
+- name: Install sic
+  package:
+    name: sic
+    state: present
+
 - name: Install acme-sync
   copy:
     src: acme-sync
@@ -11,6 +16,15 @@
     owner: root
     group: wheel
     mode: 0500
+    validate: "sh -n %s"
+
+- name: Install check_irc_network
+  copy:
+    src: check_irc_network
+    dest: /usr/local/sbin/check_irc_network
+    owner: root
+    group: wheel
+    mode: 0555
     validate: "sh -n %s"
 
 - name: Run acme-sync

@@ -1,0 +1,12 @@
+PS1='\h:\w\$ '
+
+export HISTCONTROL=ignoredups
+export HISTFILE="$HOME"/.history
+export HISTSIZE=10000
+
+export EDITOR=mg
+
+PKG_PATH=installpath
+PKG_PATH=https://stable.mtier.org/updates/"$(uname -r)"/"$(arch -s)":"$PKG_PATH"
+PKG_PATH=https://assets.tfes.org/openbsd/"$(uname -r)"/packages/"$(arch -s)":"$PKG_PATH"
+export PKG_PATH

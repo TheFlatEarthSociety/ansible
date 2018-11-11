@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# TODO: Template this based on the inventory.
+nodes='atl1.irc.tfes.org fra1.irc.tfes.org lon1.irc.tfes.org ord1.irc.tfes.org'
+
+out="$((
+	# TODO: Fix sic so these sleeps aren't necessary.
+	for n in $nodes; do
+		sleep 1
+		echo ":INFO $n"
+	done
+	sleep 5
+) | sic -h 127.0.0.1 -n check_irc_network -t -H irc.tfes.org)"
+
+m=
+
+for n in $nodes; do
+	if ! echo "$out" | grep -q "^$(echo "$n" | sed 's/\./\\./g')"; then
+		m="$m, $n unknown"
+	fi
+done
+
+if [ -n "$m" ]; then
+	echo "WARNING: ${m#, }"
+	exit 1
+else
+	echo 'OK: all nodes online'
+	exit 0
+fi
