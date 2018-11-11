@@ -1,4 +1,4 @@
-PS1='\h:\w\$ '
+export PS1='\h:\w\$ '
 
 export HISTCONTROL=ignoredups
 export HISTFILE="$HOME"/.history
