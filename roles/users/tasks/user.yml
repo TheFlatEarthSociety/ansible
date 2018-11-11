@@ -15,6 +15,7 @@
     group: "{{ username }}"
     groups: "{{ user_groups }}"
     home: /home/{{ username }}
+    comment: "{{ username }}"
 
 - name: /home/{{ username }}
   file:
