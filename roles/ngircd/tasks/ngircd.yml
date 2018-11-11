@@ -15,7 +15,7 @@
     dest: /usr/local/sbin/acme-sync
     owner: root
     group: wheel
-    mode: 0500
+    mode: 0555
     validate: "sh -n %s"
 
 - name: Install check_irc_network
