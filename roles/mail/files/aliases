@@ -82,9 +82,9 @@ _slaacd: /dev/null
 sshd:   /dev/null
 
 # Well-known aliases -- these should be filled in!
-# root:
-# manager:
-# dumper:
+root:		parsifal
+manager:	parsifal
+dumper:		parsifal
 
 # RFC 2142: NETWORK OPERATIONS MAILBOX NAMES
 abuse:		root
@@ -97,3 +97,6 @@ security:	root
 # news:		usenet
 # webmaster:	root
 # ftp:		root
+
+# Real human beans.
+parsifal:	parsifal@tfes.org

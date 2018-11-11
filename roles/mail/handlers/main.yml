@@ -1,0 +1,9 @@
+---
+- name: newaliases
+  command: newaliases
+
+- name: Reload smtpd
+  service:
+    name: smtpd
+    # smtpd does not support reload
+    state: restarted

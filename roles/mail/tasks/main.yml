@@ -1,0 +1,25 @@
+---
+- name: /etc/mail/aliases
+  copy:
+    src: aliases
+    dest: /etc/mail/aliases
+    owner: root
+    group: wheel
+    mode: 0444
+  notify: newaliases
+
+- name: /etc/mail/smtpd.conf
+  template:
+    src: smtpd.conf
+    dest: /etc/mail/smtpd.conf
+    owner: root
+    group: wheel
+    mode: 0444
+    validate: "smtpd -nf %s"
+  notify: Reload smtpd
+
+- name: Enable smtpd
+  service:
+    name: smtpd
+    state: started
+    enabled: yes
