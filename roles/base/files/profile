@@ -1,4 +1,4 @@
-export PS1='\h:\w\$ '
+export PS1="$(hostname | sed 's/\.tfes\.org$//')"':\w\$ '
 
 export HISTCONTROL=ignoredups
 export HISTFILE="$HOME"/.history
