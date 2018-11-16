@@ -10,7 +10,10 @@ out="$((
 		echo ":INFO $n"
 	done
 	sleep 5
-) | sic -h 127.0.0.1 -n check_irc_network -t -H irc.tfes.org)"
+) | /usr/local/bin/sic \
+	-h 127.0.0.1 \
+	-n "$(hostname | sed 's/\.tfes\.org$//;s/\.//g')" \
+	-t -H irc.tfes.org)"
 
 m=
 

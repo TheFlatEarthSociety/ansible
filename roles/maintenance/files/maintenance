@@ -11,4 +11,4 @@ pkg_add -u
 
 # Always reboot, whether or not we installed updates. This sets the correct user
 # expectation, and makes sure we know if a reboot would break anything.
-reboot
+shutdown -r +1 'Automated maintenance. To cancel: doas pkill shutdown'
