@@ -21,5 +21,9 @@ fra1.irc.tfes.org irc_peer=lon1.irc.tfes.org irc_fallback_peer=atl1.irc.tfes.org
 lon1.irc.tfes.org
 ord1.irc.tfes.org irc_peer=atl1.irc.tfes.org irc_fallback_peer=lon1.irc.tfes.org
 
+[nagios]
+mon1.ewr1.tfes.org
+mon1.par1.tfes.org
+
 [all:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7
