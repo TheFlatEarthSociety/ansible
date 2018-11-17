@@ -14,6 +14,7 @@
     uid: "{{ uid }}"
     group: "{{ username }}"
     groups: "{{ user_groups }}"
+    login_class: default
     home: /home/{{ username }}
     comment: "{{ username }}"
 
