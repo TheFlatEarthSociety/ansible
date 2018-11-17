@@ -1,0 +1,7 @@
+{{ duid }}.b none swap sw
+{{ duid }}.a / ffs rw 1 1
+{{ duid }}.g /home ffs rw,nodev,nosuid 1 2
+{{ duid }}.e /usr ffs rw,nodev 1 2
+{{ duid }}.f /usr/local ffs rw,wxallowed,nodev 1 2
+{{ duid }}.d /var ffs rw,nodev,nosuid 1 2
+swap /tmp mfs rw,-s128M,noatime,nodev,nosuid 0 0

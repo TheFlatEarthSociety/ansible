@@ -4,6 +4,7 @@
   - role: base
   - role: mail
   - role: maintenance
+  - role: net
   - role: pf
   - role: ssh
   - role: users

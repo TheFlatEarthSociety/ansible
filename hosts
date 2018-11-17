@@ -25,5 +25,18 @@ ord1.irc.tfes.org irc_peer=atl1.irc.tfes.org irc_fallback_peer=lon1.irc.tfes.org
 mon1.ewr1.tfes.org
 mon1.par1.tfes.org
 
+[dhcp:children]
+irc
+
+[eu]
+fra1.irc.tfes.org
+lon1.irc.tfes.org
+mon1.par1.tfes.org
+
+[us]
+atl1.irc.tfes.org
+mon1.ewr1.tfes.org
+ord1.irc.tfes.org
+
 [all:vars]
 ansible_python_interpreter=/usr/local/bin/python2.7

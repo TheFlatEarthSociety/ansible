@@ -8,6 +8,28 @@
     group: wheel
     mode: 0444
     validate: "doas -C %s"
+- name: /etc/fstab
+  template:
+    src: fstab
+    dest: /etc/fstab
+    owner: root
+    group: wheel
+    mode: 0444
+- name: /etc/installurl
+  copy:
+    content: "{{ mirror }}\n"
+    dest: /etc/installurl
+    owner: root
+    group: wheel
+    mode: 0444
+- name: /etc/localtime
+  file:
+    path: /etc/localtime
+    state: link
+    src: /usr/share/zoneinfo/UTC
+    owner: root
+    group: wheel
+    follow: no
 - name: /etc/profile
   copy:
     src: profile
@@ -39,3 +61,15 @@
     name: sndiod
     state: stopped
     enabled: no
+
+# Users should be managed with ansible, so clean up any adduser cruft.
+- name: /etc/adduser.conf
+  file:
+    path: /etc/adduser.conf
+    state: absent
+    follow: no
+- name: /etc/group.bak
+  file:
+    path: /etc/group.bak
+    state: absent
+    follow: no
