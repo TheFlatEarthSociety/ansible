@@ -30,6 +30,14 @@
     owner: root
     group: wheel
     follow: no
+- name: /etc/pf.d
+  file:
+    path: /etc/pf.d
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0500
+    follow: no
 - name: /etc/profile
   copy:
     src: profile

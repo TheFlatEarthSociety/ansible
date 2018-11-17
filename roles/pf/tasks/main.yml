@@ -1,13 +1,4 @@
 ---
-- name: /etc/pf.d
-  file:
-    path: /etc/pf.d
-    state: directory
-    owner: root
-    group: wheel
-    mode: 0500
-    follow: no
-
 - name: /etc/pf.d/00start
   copy:
     src: 00start
@@ -25,3 +16,13 @@
     group: wheel
     mode: 0400
   notify: /etc/pf.conf
+
+- name: /etc/pf.conf
+  assemble:
+    src: /etc/pf.d
+    dest: /etc/pf.conf
+    owner: root
+    group: wheel
+    mode: 0400
+    validate: "pfctl -nf %s"
+  notify: Reload pf

@@ -1,0 +1,47 @@
+---
+- name: Install websocketd
+  package:
+    name: websocketd
+    state: present
+
+- name: Manage group wsproxy
+  group:
+    name: wsproxy
+    gid: 3000
+
+- name: Manage user wsproxy
+  user:
+    name: wsproxy
+    password: "*************"
+    uid: 3000
+    group: wsproxy
+    groups: []
+    login_class: default
+    shell: /sbin/nologin
+    home: /nonexistent
+    create_home: no
+    comment: "websocket to irc proxy"
+
+- name: Install webirc-shim
+  template:
+    src: webirc-shim
+    dest: /usr/local/libexec/webirc-shim
+    owner: root
+    group: wsproxy
+    mode: 0510
+    validate: "perl -c %s"
+
+- name: /etc/rc.d/wsproxy
+  copy:
+    src: wsproxy.rc
+    dest: /etc/rc.d/wsproxy
+    owner: root
+    group: wheel
+    mode: 0555
+    validate: "sh -n %s"
+
+- name: Enable wsproxy
+  service:
+    name: wsproxy
+    state: started
+    enabled: yes

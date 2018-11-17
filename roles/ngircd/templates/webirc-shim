@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use IO::Select;
+use IO::Socket::IP;
+
+sub xread;
+sub xwrite;
+
+# rfc 2812 2.3.1
+my ($host, $addr) = ($ENV{REMOTE_HOST}, $ENV{REMOTE_ADDR});
+die "webirc-shim: invalid hostname"
+	unless $host =~ /^[0-9a-z][0-9a-z.-]*$/i;
+die "webirc-shim: invalid ip address"
+	unless $addr =~ /^[0-9a-f.:]+$/i;
+
+my $sock = IO::Socket::IP->new(
+	PeerHost => "localhost",
+	PeerPort => 6668,
+	Type     => SOCK_STREAM,
+) or die "webirc-shim: $@";
+
+xwrite $sock, "WEBIRC {{ webirc_password }} webirc-shim $host $addr\r\n";
+
+my $s = IO::Select->new();
+$s->add(\*STDIN);
+$s->add($sock);
+
+my (@r, $buf);
+while(@r = $s->can_read()) {
+	for (@r) {
+		if($_==\*STDIN) {
+			xread \*STDIN, \$buf;
+			xwrite $sock, $buf;
+		}
+		if($_==$sock) {
+			xread $sock, \$buf;
+			xwrite \*STDOUT, $buf;
+		}
+	}
+}
+
+sub xread {
+	my $n = sysread shift, ${(shift)}, 1024;
+	die "webirc-shim: $!" unless defined $n;
+	die "webirc-shim: eof" unless $n;
+}
+
+sub xwrite {
+	my $n = syswrite shift, shift;
+	die "webirc-shim: $!" unless defined $n;
+}

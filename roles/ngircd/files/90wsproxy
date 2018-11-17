@@ -1,0 +1,3 @@
+# Non-TLS port in ngircd, used for websocket proxying.
+block return in proto tcp from any to port 6668
+

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+daemon="/usr/local/bin/websocketd"
+daemon_flags="--port 6669 --address=127.0.0.1 /usr/local/libexec/webirc-shim"
+daemon_user="wsproxy"
+
+. /etc/rc.d/rc.subr
+
+rc_bg=YES
+rc_reload=NO
+
+rc_start() {
+	${rcexec} "${daemon} ${daemon_flags} </dev/null 2>&1 | \
+		logger -p daemon.info -t websocketd"
+}
+
+rc_cmd $1
