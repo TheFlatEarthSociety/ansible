@@ -1,0 +1,27 @@
+---
+- name: /etc/pf.d
+  file:
+    path: /etc/pf.d
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0500
+    follow: no
+
+- name: /etc/pf.d/00start
+  copy:
+    src: 00start
+    dest: /etc/pf.d/00start
+    owner: root
+    group: wheel
+    mode: 0400
+  notify: /etc/pf.conf
+
+- name: /etc/pf.d/99end
+  copy:
+    src: 99end
+    dest: /etc/pf.d/99end
+    owner: root
+    group: wheel
+    mode: 0400
+  notify: /etc/pf.conf

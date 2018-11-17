@@ -1,0 +1,9 @@
+#	$OpenBSD: pf.conf,v 1.55 2017/12/03 20:40:04 sthen Exp $
+#
+# See pf.conf(5) and /etc/examples/pf.conf
+
+set skip on lo
+
+block return	# block stateless traffic
+pass		# establish keep-state
+

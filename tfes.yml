@@ -4,6 +4,7 @@
   - role: base
   - role: mail
   - role: maintenance
+  - role: pf
   - role: ssh
   - role: users
   environment:
