@@ -4,12 +4,21 @@ use strict;
 use warnings;
 use IO::Select;
 use IO::Socket::IP;
+use Socket qw(AF_INET AF_INET6 inet_pton);
 
 sub xread;
 sub xwrite;
 
-# rfc 2812 2.3.1
 my ($host, $addr) = ($ENV{REMOTE_HOST}, $ENV{REMOTE_ADDR});
+
+if($addr eq "127.0.0.1" and my $xff = $ENV{HTTP_X_FORWARDED_FOR}) {
+	$addr = $xff;
+	my $fam = $addr =~ /:/ ? AF_INET6 : AF_INET;
+	($host) = gethostbyaddr(inet_pton($fam, $addr), $fam);
+	$host ||= $addr;
+}
+
+# rfc 2812 2.3.1
 die "webirc-shim: invalid hostname"
 	unless $host =~ /^[0-9a-z][0-9a-z.-]*$/i;
 die "webirc-shim: invalid ip address"

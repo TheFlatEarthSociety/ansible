@@ -1,4 +1,42 @@
 ---
+- name: Install patched relayd
+  command: /usr/local/sbin/tfespatch https://assets.tfes.org/openbsd/6.4/bin/relayd-64tfes1.gz
+  args:
+    creates: /usr/local/sbin/relayd-64tfes1
+
+- name: /etc/ssl/0.0.0.0:443.crt
+  file:
+    path: /etc/ssl/0.0.0.0:443.crt
+    state: link
+    src: ../ngircd/server-cert.pem
+    owner: root
+    group: wheel
+    follow: no
+- name: /etc/ssl/private/0.0.0.0:443.key
+  file:
+    path: /etc/ssl/private/0.0.0.0:443.key
+    state: link
+    src: ../../ngircd/server-key.pem
+    owner: root
+    group: wheel
+    follow: no
+- name: /etc/ssl/:::443.crt
+  file:
+    path: /etc/ssl/:::443.crt
+    state: link
+    src: ../ngircd/server-cert.pem
+    owner: root
+    group: wheel
+    follow: no
+- name: /etc/ssl/private/:::443.key
+  file:
+    path: /etc/ssl/private/:::443.key
+    state: link
+    src: ../../ngircd/server-key.pem
+    owner: root
+    group: wheel
+    follow: no
+
 - name: /etc/relayd.conf
   copy:
     src: relayd.conf
@@ -6,11 +44,26 @@
     owner: root
     group: wheel
     mode: 0400
-    validate: "relayd -nf %s"
+    validate: "relayd-64tfes1 -nf %s"
   notify: Reload relayd
 
-- name: Enable relayd
+- name: /etc/rc.d/relayd_tfes
+  copy:
+    src: relayd_tfes.rc
+    dest: /etc/rc.d/relayd_tfes
+    owner: root
+    group: wheel
+    mode: 0555
+    validate: "sh -n %s"
+
+- name: Disable OpenBSD relayd
   service:
     name: relayd
+    state: stopped
+    enabled: no
+
+- name: Enable patched relayd
+  service:
+    name: relayd_tfes
     state: started
     enabled: yes
