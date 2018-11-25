@@ -28,8 +28,10 @@
     dest: /usr/local/libexec/webirc-shim
     owner: root
     group: wsproxy
-    mode: 0510
-    validate: "perl -c %s"
+    # setgid with restricted execute permissions because it contains the webirc
+    # password, and we don't want it ptraced.
+    mode: 02510
+    validate: "perl -Tc %s"
 
 - name: /etc/rc.d/wsproxy
   copy:
