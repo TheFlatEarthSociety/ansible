@@ -14,7 +14,7 @@ use Socket qw(AF_INET AF_INET6 getaddrinfo inet_ntop inet_pton
 sub xread;
 sub xwrite;
 
-pledge "stdio dns inet" or die "pledge: $!";
+pledge qw(stdio dns inet) or die "pledge: $!";
 
 my $addr = $ENV{REMOTE_ADDR};
 if($addr eq "127.0.0.1" and my $xff = $ENV{HTTP_X_FORWARDED_FOR}) {
@@ -52,7 +52,7 @@ my $sock = IO::Socket::IP->new(
 	Type     => SOCK_STREAM,
 ) or die "webirc-shim: $@";
 
-pledge "stdio" or die "pledge: $!";
+pledge qw(stdio) or die "pledge: $!";
 
 # We don't read error responses to this command, so they will be sent to the
 # client. This might be considered a bug, but it doesn't leak any sensitive
