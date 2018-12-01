@@ -1,3 +1,7 @@
 # Non-TLS port in ngircd, used for websocket proxying.
-block return in proto tcp from any to port 6668
+block return in proto tcp to port 6668
+
+# Websocket proxy user should not be connecting to other hosts, but does need
+# DNS to look up client hostnames.
+block return out log proto {tcp udp} to port != 53 user wsproxy
 
