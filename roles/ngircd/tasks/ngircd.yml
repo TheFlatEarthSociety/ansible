@@ -27,6 +27,15 @@
     mode: 0555
     validate: "sh -n %s"
 
+- name: /usr/local/libexec/maintenance.d/00check_irc_network
+  file:
+    path: /usr/local/libexec/maintenance.d/00check_irc_network
+    state: link
+    src: /usr/local/sbin/check_irc_network
+    owner: root
+    group: wheel
+    follow: no
+
 - name: Run acme-sync
   command: acme-sync
   args:

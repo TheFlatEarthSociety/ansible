@@ -1,6 +1,33 @@
 ---
-- include: maintenance.yml
+- name: /usr/local/libexec/maintenance.d
+  file:
+    path: /usr/local/libexec/maintenance.d
+    state: directory
+    owner: root
+    group: wheel
+    mode: 0500
+    follow: no
+
+- name: Install maintenance script
+  copy:
+    src: maintenance
+    dest: /usr/local/sbin/maintenance
+    owner: root
+    group: wheel
+    mode: 0555
+    validate: "sh -n %s"
+
+- name: Install maintenance cron job
+  cron:
+    name: maintenance
+    job: /usr/local/sbin/maintenance
+    weekday: "{{ maintenance.day }}"
+    hour: "{{ maintenance.hour }}"
+    minute: 0
   when: maintenance is defined
 
-- include: maintenance_cleanup.yml
+- name: Remove maintenance cron job
+  cron:
+    name: maintenance
+    state: absent
   when: maintenance is undefined

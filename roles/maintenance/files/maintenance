@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# TODO: Genericise safety checks so we can use this on non-IRC servers.
-/usr/local/sbin/check_irc_network || exit 1
+for hook in /usr/local/libexec/maintenance.d/*; do
+	[ -x "$hook" ] || continue
+	"$hook" || exit 1
+done
 
 # Get PKG_PATH.
 . /etc/profile

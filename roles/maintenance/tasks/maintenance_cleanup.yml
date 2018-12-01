@@ -1,5 +1,0 @@
----
-- name: Remove maintenance cron job
-  cron:
-    name: maintenance
-    state: absent

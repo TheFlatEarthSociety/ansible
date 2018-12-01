@@ -1,2 +1,5 @@
 ---
 duid: 5d389371904cda2d
+maintenance:
+  day: sun
+  hour: 9
