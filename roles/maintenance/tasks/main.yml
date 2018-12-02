@@ -5,7 +5,7 @@
     state: directory
     owner: root
     group: wheel
-    mode: 0500
+    mode: 0555
     follow: no
 
 - name: Install maintenance script
