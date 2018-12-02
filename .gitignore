@@ -2,5 +2,6 @@
 *.swp
 *~
 
-# Our ircd passwords should not be in a public git repo
+# Our secrets should not be in a public git repo
+/roles/nagios/defaults/main.yml
 /roles/ngircd/defaults/main.yml

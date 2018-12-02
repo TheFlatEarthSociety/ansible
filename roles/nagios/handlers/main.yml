@@ -1,0 +1,5 @@
+---
+- name: Reload ii
+  service:
+    name: ii
+    state: reloaded

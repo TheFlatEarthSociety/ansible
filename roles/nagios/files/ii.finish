@@ -1,0 +1,4 @@
+#!/bin/sh
+pkill ii
+sleep 0.1
+pkill -9 ii
