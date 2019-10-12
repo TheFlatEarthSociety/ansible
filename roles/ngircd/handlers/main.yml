@@ -6,5 +6,5 @@
 
 - name: Reload relayd
   service:
-    name: relayd_tfes
+    name: relayd
     state: reloaded

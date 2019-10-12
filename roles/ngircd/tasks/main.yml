@@ -1,4 +1,3 @@
 ---
 - include: ngircd.yml
 - include: relayd.yml
-- include: webirc.yml

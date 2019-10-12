@@ -47,15 +47,6 @@
     mode: 0444
     validate: "sh -n %s"
 
-- name: Install tfespatch
-  copy:
-    src: tfespatch
-    dest: /usr/local/sbin/tfespatch
-    owner: root
-    group: wheel
-    mode: 0555
-    validate: "sh -n %s"
-
 # signify package keys
 - name: /etc/signify/mtier-64-pkg.pub
   copy:

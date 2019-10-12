@@ -65,14 +65,6 @@
     validate: "ngircd -tf %s"
   notify: Reload ngircd
 
-- name: /etc/pf.d/90wsproxy
-  copy:
-    src: 90wsproxy
-    dest: /etc/pf.d/90wsproxy
-    owner: root
-    group: wheel
-    mode: 0400
-
 - name: Enable ngircd
   service:
     name: ngircd
