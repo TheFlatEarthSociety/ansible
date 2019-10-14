@@ -1,0 +1,8 @@
+PS1="$(hostname | sed 's/\.tfes\.org$//')"':\w\$ '
+
+HISTCONTROL=ignoredups
+HISTFILE="$HOME"/.history
+HISTSIZE=10000
+
+export EDITOR=mg
+export PKG_PATH=https://assets.tfes.org/openbsd/"$(uname -r)"/packages/"$(arch -s)":installpath

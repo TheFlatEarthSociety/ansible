@@ -1,0 +1,24 @@
+#	$OpenBSD: smtpd.conf,v 1.12 2019/07/24 15:31:53 kmos Exp $
+
+# This is the smtpd server system-wide configuration file.
+# See smtpd.conf(5) for more information.
+
+table aliases file:/etc/mail/aliases
+
+# This must be created manually on each machine.
+table auth_palpatine file:/etc/mail/auth_palpatine
+
+# To accept external mail, replace with: listen on all
+#
+listen on lo0
+
+action "local_mail" mbox alias <aliases>
+
+# Relay all mail via palpatine so that it can be signed with DKIM.
+action "outbound" relay host smtp+tls://{{ ansible_nodename }}@palpatine.tfes.org:587 auth <auth_palpatine>
+
+# Uncomment the following to accept external mail for domain "example.org"
+#
+# match from any for domain "example.org" action "local_mail"
+match for local action "local_mail"
+match for any action "outbound"

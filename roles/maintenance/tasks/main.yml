@@ -23,7 +23,7 @@
     job: /usr/local/sbin/maintenance
     weekday: "{{ maintenance.day }}"
     hour: "{{ maintenance.hour }}"
-    minute: 0
+    minute: "0"
   when: maintenance is defined
 
 - name: Remove maintenance cron job

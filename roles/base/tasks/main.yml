@@ -1,4 +1,8 @@
 ---
+- name: Set OS version short fact
+  set_fact:
+    v: "{{ ansible_distribution_version | replace('.', '') }}"
+
 # Common files.
 - name: /etc/doas.conf
   copy:
@@ -40,7 +44,7 @@
     follow: no
 - name: /etc/profile
   copy:
-    src: profile
+    src: profile{{ v }}
     dest: /etc/profile
     owner: root
     group: wheel
@@ -48,17 +52,18 @@
     validate: "sh -n %s"
 
 # signify package keys
-- name: /etc/signify/mtier-64-pkg.pub
+- name: /etc/signify/mtier-{{ v }}-pkg.pub
   copy:
-    src: mtier-64-pkg.pub
-    dest: /etc/signify/mtier-64-pkg.pub
+    src: mtier-{{ v }}-pkg.pub
+    dest: /etc/signify/mtier-{{ v }}-pkg.pub
     owner: root
     group: wheel
     mode: 0444
-- name: /etc/signify/tfes-64-pkg.pub
+  when: ansible_distribution_version == "6.4"
+- name: /etc/signify/tfes-{{ v }}-pkg.pub
   copy:
-    src: tfes-64-pkg.pub
-    dest: /etc/signify/tfes-64-pkg.pub
+    src: tfes-{{ v }}-pkg.pub
+    dest: /etc/signify/tfes-{{ v }}-pkg.pub
     owner: root
     group: wheel
     mode: 0444

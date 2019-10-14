@@ -46,8 +46,8 @@
   cron:
     name: acme-sync
     job: /usr/local/sbin/acme-sync
-    minute: 38
-    hour: 22
+    minute: "38"
+    hour: "22"
 
 - name: Create dhparams
   command: openssl dhparam -out /etc/ngircd/dhparams.pem 2048

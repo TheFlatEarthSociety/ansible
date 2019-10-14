@@ -1,26 +1,29 @@
 ---
+# This comes first as we need to gather facts before setting PKG_PATH.
+- hosts: all
+  tasks: []
 - hosts: all
   roles:
-  - role: base
-  - role: mail
-  - role: maintenance
-  - role: net
-  - role: ssh
-  - role: users
+    - role: base
+    - role: mail
+    - role: maintenance
+    - role: net
+    - role: ssh
+    - role: users
   environment:
-    PKG_PATH: "https://assets.tfes.org/openbsd/6.4/packages/amd64:https://stable.mtier.org/updates/6.4/amd64:installpath"
+    PKG_PATH: "https://assets.tfes.org/openbsd/{{ ansible_distribution_version }}/packages/{{ ansible_architecture }}:installpath"
 - hosts: irc
   roles:
-  - role: ngircd
+    - role: ngircd
   environment:
-    PKG_PATH: "https://assets.tfes.org/openbsd/6.4/packages/amd64:https://stable.mtier.org/updates/6.4/amd64:installpath"
+    PKG_PATH: "https://assets.tfes.org/openbsd/{{ ansible_distribution_version }}/packages/{{ ansible_architecture }}:installpath"
 - hosts: nagios
   roles:
-  - role: nagios
+    - role: nagios
   environment:
-    PKG_PATH: "https://assets.tfes.org/openbsd/6.4/packages/amd64:https://stable.mtier.org/updates/6.4/amd64:installpath"
+    PKG_PATH: "https://assets.tfes.org/openbsd/{{ ansible_distribution_version }}/packages/{{ ansible_architecture }}:installpath"
 - hosts: all
   roles:
-  - role: pf
+    - role: pf
   environment:
-    PKG_PATH: "https://assets.tfes.org/openbsd/6.4/packages/amd64:https://stable.mtier.org/updates/6.4/amd64:installpath"
+    PKG_PATH: "https://assets.tfes.org/openbsd/{{ ansible_distribution_version }}/packages/{{ ansible_architecture }}:installpath"

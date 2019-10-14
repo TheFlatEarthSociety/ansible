@@ -1,7 +1,7 @@
 ---
 - name: /etc/mail/aliases
   copy:
-    src: aliases
+    src: aliases{{ v }}
     dest: /etc/mail/aliases
     owner: root
     group: wheel
@@ -10,7 +10,7 @@
 
 - name: /etc/mail/smtpd.conf
   template:
-    src: smtpd.conf
+    src: smtpd.conf{{ v }}
     dest: /etc/mail/smtpd.conf
     owner: root
     group: wheel
