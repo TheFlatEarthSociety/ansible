@@ -20,8 +20,8 @@ installation process.
        a) networking is dhcp for IPv4, autoconf for IPv6, except on those few
           hosts with no IPv4 (just select none in that case)
        b) pick any nameservers you like, ansible will replace them later
-       c) say no to running the X Window System
-       d) set the root password to something temporary for now
+       c) set the root password to something temporary for now
+       d) say no to running the X Window System
        e) say no to setting up a user (we'll do that ourselves below)
        f) say no to root login over ssh
 
@@ -83,7 +83,15 @@ installation process.
      no password.
 
  11. Configure palpatine (legacy server that performs DKIM signing) to permit
-     the new host to relay mail.
+     the new host to relay mail. Depending on the host's role, there may be
+     other access required as well.
 
      This is undocumented and you very likely do not have the necessary
      permissions to do it. If you are not Parsifal, simply ask Parsifal.
+
+ 12. Re-run ansible to confirm that it believes the state of the host is
+     consistent. That is, the play recap should indicate that all actions are
+     either ok (no change) or skipped (not applicable to this host).
+
+ 13. Reboot the host to apply any boot-time configuration that ansible
+     deployed.

@@ -4,8 +4,6 @@
 # See smtpd.conf(5) for more information.
 
 table aliases file:/etc/mail/aliases
-
-# This must be created manually on each machine.
 table auth_palpatine file:/etc/mail/auth_palpatine
 
 # To accept external mail, replace with: listen on all
