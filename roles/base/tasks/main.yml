@@ -50,6 +50,14 @@
     group: wheel
     mode: 0444
     validate: "sh -n %s"
+- name: /etc/sysctl.conf
+  copy:
+    src: sysctl.conf
+    dest: /etc/sysctl.conf
+    owner: root
+    group: wheel
+    mode: 0444
+  when: ansible_distribution_version != "6.4"
 
 # signify package keys
 - name: /etc/signify/mtier-{{ v }}-pkg.pub

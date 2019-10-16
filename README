@@ -94,4 +94,4 @@ installation process.
      either ok (no change) or skipped (not applicable to this host).
 
  13. Reboot the host to apply any boot-time configuration that ansible
-     deployed.
+     installed.
