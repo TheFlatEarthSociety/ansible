@@ -6,7 +6,6 @@
     owner: root
     group: wheel
     mode: 0400
-  notify: /etc/pf.conf
 
 - name: /etc/pf.d/99end
   copy:
@@ -15,7 +14,6 @@
     owner: root
     group: wheel
     mode: 0400
-  notify: /etc/pf.conf
 
 - name: /etc/pf.conf
   assemble:

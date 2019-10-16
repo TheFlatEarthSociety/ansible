@@ -1,4 +1,13 @@
 ---
+- name: /etc/mail/auth_palpatine
+  copy:
+    dest: /etc/mail/auth_palpatine
+    owner: root
+    group: wheel
+    mode: 0400
+    force: no
+    content: "{{ lookup('password', '/dev/null length=64') }}\n"
+
 - name: /etc/mail/aliases
   copy:
     src: aliases{{ v }}

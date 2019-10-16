@@ -1,0 +1,89 @@
+Building a server
+-----------------
+
+We build all stateless servers from scratch for every OpenBSD release rather
+than upgrading them to ensure our provisioning process works.
+
+The process is as follows, for a Vultr VPS. These FES-specific notes are
+intended to be read in conjunction with the OpenBSD FAQ
+<https://www.openbsd.org/faq/> if you are unfamiliar with the OpenBSD
+installation process.
+
+  1. Boot the host into the new ISO using the Vultr console. Alternatively,
+     you can fetch bsd.rd and boot that, but the ISO has the sets already
+     downloaded. Either method is fine.
+
+  2. At the prompt, select (I)nstall. Most configuration questions can be left
+     as default or be given obvious answers (such as the machine hostname).
+
+     Things to note:
+       a) networking is dhcp for IPv4, autoconf for IPv6, except on those few
+          hosts with no IPv4 (just select none in that case)
+       b) pick any nameservers you like, ansible will replace them later
+       c) say no to running the X Window System
+       d) set the root password to something temporary for now
+       e) say no to setting up a user (we'll do that ourselves below)
+       f) say no to root login over ssh
+
+  3. For partitioning, use your brain regarding the host's role. If there are
+     existing hosts with a similar role, you can look at those for
+     inspiration, but before copying their layout, take a look at their disk
+     usage and see if their partitioning makes sense for their actual usage.
+
+     As a general guideline, allocate around 500M for /, 2G for /usr and 2-5G
+     for /usr/local. /home and /var will vary according to what kinds of
+     things the host will be doing. Do not create a /tmp partition, as we will
+     use mfs for that.
+
+     Remember that you do not need to allocate the whole disk if you don't
+     need it. Having some unallocated space gives you more flexibility later.
+
+  4. Install all the sets. No exceptions.
+
+     If you are installing from an ISO, it is ok to agree to continue without
+     verification of the sets. If you fetched them over the network, they
+     *must* be verified.
+
+  5. Timezone is UTC.
+
+  6. Before rebooting, drop into a shell and configure /tmp and IPv6
+     networking:
+       sed -i 's/autoconf/autoconf -autoconfprivacy -soii/' /mnt/etc/hostname.*
+       echo swap /tmp mfs rw,-s128M,noatime,nodev,nosuid 0 0 >>/mnt/etc/fstab
+       reboot
+
+  7. Log in as root on the console, using the temporary password you set. Look
+     up your uid in roles/users/vars/user:your_username.yml in this repo, and
+     create your user with enough access to run ansible:
+       useradd -mG wheel -u your_uid your_username
+       echo permit nopass :wheel >/etc/doas.conf
+
+  8. Set a temporary password on your user:
+       passwd your_username
+
+     Then, log in over ssh and immediately set the root password to the
+     (randomly generated) permanent one now that you can easily copy and paste
+     it:
+       doas passwd root
+
+     (The means of recording passwords is outside the scope of this document.)
+
+  9. Install Python (ansible's only prerequisite):
+       doas pkg_add python%3
+
+     If there are multiple version options, you should generally select the
+     newest one.
+
+ 10. Run ansible by invoking (in this repository):
+       make hostname
+
+     Replacing `hostname` with the hostname of the machine, of course.
+     Optionally, you can copy your ssh key to the machine first. In any case,
+     ansible will ensure that your ssh key is present and that your user has
+     no password.
+
+ 11. Configure palpatine (legacy server that performs DKIM signing) to permit
+     the new host to relay mail.
+
+     This is undocumented and you very likely do not have the necessary
+     permissions to do it. If you are not Parsifal, simply ask Parsifal.
