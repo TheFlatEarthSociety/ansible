@@ -6,7 +6,8 @@
     group: wheel
     mode: 0400
     force: no
-    content: "{{ ansible_nodename }}\t{{ lookup('password', '/dev/null length=64') }}\n"
+    content: "{{ ansible_nodename }}\t{{ lookup('password', '/dev/null chars=ascii_letters,digits length=64') }}\n"
+  notify: Reload smtpd
 
 - name: /etc/mail/aliases
   copy:
