@@ -9,7 +9,7 @@
 
 - name: /etc/resolv.conf
   copy:
-    src: resolv.conf{{ v }}
+    src: resolv.conf
     dest: /etc/resolv.conf
     owner: root
     group: wheel
@@ -18,7 +18,7 @@
 
 - name: /etc/resolv.conf.tail
   copy:
-    src: resolv.conf.tail{{ v }}
+    src: resolv.conf.tail
     dest: /etc/resolv.conf.tail
     owner: root
     group: wheel

@@ -38,18 +38,5 @@ atl1.irc.tfes.org
 mon1.ewr1.tfes.org
 ord1.irc.tfes.org
 
-[openbsd64]
-atl1.irc.tfes.org
-
-[openbsd64:vars]
-ansible_python_interpreter=/usr/local/bin/python2.7
-
-[openbsd66]
-fra1.irc.tfes.org
-lon1.irc.tfes.org
-mon1.ewr1.tfes.org
-mon1.par1.tfes.org
-ord1.irc.tfes.org
-
-[openbsd66:vars]
+[all:vars]
 ansible_python_interpreter=/usr/local/bin/python3

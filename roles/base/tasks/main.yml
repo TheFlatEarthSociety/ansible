@@ -44,7 +44,7 @@
     follow: no
 - name: /etc/profile
   copy:
-    src: profile{{ v }}
+    src: profile
     dest: /etc/profile
     owner: root
     group: wheel
@@ -57,17 +57,8 @@
     owner: root
     group: wheel
     mode: 0444
-  when: ansible_distribution_version != "6.4"
 
 # signify package keys
-- name: /etc/signify/mtier-{{ v }}-pkg.pub
-  copy:
-    src: mtier-{{ v }}-pkg.pub
-    dest: /etc/signify/mtier-{{ v }}-pkg.pub
-    owner: root
-    group: wheel
-    mode: 0444
-  when: ansible_distribution_version == "6.4"
 - name: /etc/signify/tfes-{{ v }}-pkg.pub
   copy:
     src: tfes-{{ v }}-pkg.pub

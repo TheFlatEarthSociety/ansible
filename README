@@ -60,9 +60,12 @@ installation process.
   7. Set a temporary password on your user:
        passwd your_username
 
-     Then, log in over ssh and immediately set the root password to the
-     (randomly generated) permanent one now that you can easily copy and paste
-     it:
+     Then, log in over ssh, verifying the host key fingerprint by entering (on
+     the console):
+       ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key
+
+     Immediately set the root password to the (randomly generated) permanent
+     one now that you can easily copy and paste it:
        doas passwd root
 
      (The means of recording passwords is outside the scope of this document.)
