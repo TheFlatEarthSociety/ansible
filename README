@@ -45,7 +45,7 @@ installation process.
 
   5. Before rebooting, drop into a shell and configure domain name, /tmp and
      IPv6 networking:
-       echo <hostname>.tfes.org >/mnt/etc/hostname
+       echo <hostname>.tfes.org >/mnt/etc/myname
        sed -i 's/inet6 autoconf/inet6 autoconf -temporary -soii/' \
          /mnt/etc/hostname.*
        echo swap /tmp mfs rw,-s128M,noatime,nodev,nosuid 0 0 >>/mnt/etc/fstab
@@ -79,30 +79,30 @@ installation process.
      If there are multiple version options, you should generally select the
      default one. (TODO: How does one determine the default?)
 
-  10. Create an SSH key for syncing TLS keys:
-        ssh-keygen -t ed25519 -f .ssh/id_ed25519.acme
+ 10. Create (as root) an SSH key for syncing TLS keys:
+       ssh-keygen -t ed25519 -f .ssh/id_ed25519.acme
 
-      Configure palpatine (legacy server) to accept this key. This is
-      undocumented; ask xasop.
+     Configure palpatine (legacy server) to accept this key. This is
+     undocumented; ask xasop.
 
-  10. Run ansible by invoking (in this repository):
-        make hostname
+ 11. Run ansible by invoking (in this repository):
+       make hostname
 
-      Replacing `hostname` with the hostname of the machine, of course.
-      Optionally, you can copy your ssh key to the machine first. In any case,
-      ansible will ensure that your ssh key is present and that your user has
-      no password.
+     Replacing `hostname` with the hostname of the machine, of course.
+     Optionally, you can copy your ssh key to the machine first. In any case,
+     ansible will ensure that your ssh key is present and that your user has
+     no password.
 
- 11. Configure palpatine (legacy server that performs DKIM signing) to permit
+ 12. Configure palpatine (legacy server that performs DKIM signing) to permit
      the new host to relay mail. Depending on the host's role, there may be
      other access required as well.
 
      This is undocumented and you very likely do not have the necessary
      permissions to do it. If you are not xasop, simply ask xasop.
 
- 12. Re-run ansible to confirm that it believes the state of the host is
+ 13. Re-run ansible to confirm that it believes the state of the host is
      consistent. That is, the play recap should indicate that all actions are
      either ok (no change) or skipped (not applicable to this host).
 
- 13. Reboot the host to apply any boot-time configuration that ansible
+ 14. Reboot the host to apply any boot-time configuration that ansible
      installed.
