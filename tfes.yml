@@ -17,11 +17,6 @@
     - role: ngircd
   environment:
     PKG_PATH: "https://assets.tfes.org/openbsd/{{ ansible_distribution_version }}/packages/{{ ansible_architecture }}:installpath"
-- hosts: nagios
-  roles:
-    - role: nagios
-  environment:
-    PKG_PATH: "https://assets.tfes.org/openbsd/{{ ansible_distribution_version }}/packages/{{ ansible_architecture }}:installpath"
 - hosts: all
   roles:
     - role: pf

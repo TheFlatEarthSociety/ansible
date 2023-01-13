@@ -17,14 +17,12 @@ installation process.
      as default or be given obvious answers (such as the machine hostname).
 
      Things to note:
-       a) networking is dhcp for IPv4, autoconf for IPv6, except on those few
-          hosts with no IPv4 (just select none in that case)
-       b) pick any nameservers you like, ansible will replace them later
-       c) set the root password to something temporary for now
-       d) say no to running the X Window System
-       e) say no to setting up a user (we'll do that ourselves below)
-       f) say no to root login over ssh
-       g) timezone is UTC
+       a) networking is autoconf for both IPv4 and IPv6
+       b) set the root password to something temporary for now
+       c) say no to running the X Window System
+       d) say no to setting up a user (we'll do that ourselves below)
+       e) say no to root login over ssh
+       f) timezone is UTC
 
   3. For partitioning, use your brain regarding the host's role. If there are
      existing hosts with a similar role, you can look at those for
@@ -45,24 +43,29 @@ installation process.
      verification of the sets. If you fetched them over the network, they
      *must* be verified.
 
-  5. Before rebooting, drop into a shell and configure /tmp and IPv6
-     networking:
-       sed -i 's/autoconf/autoconf -autoconfprivacy -soii/' /mnt/etc/hostname.*
+  5. Before rebooting, drop into a shell and configure domain name, /tmp and
+     IPv6 networking:
+       echo <hostname>.tfes.org >/mnt/etc/hostname
+       sed -i 's/inet6 autoconf/inet6 autoconf -temporary -soii/' \
+         /mnt/etc/hostname.*
        echo swap /tmp mfs rw,-s128M,noatime,nodev,nosuid 0 0 >>/mnt/etc/fstab
        reboot
 
-  6. Log in as root on the console, using the temporary password you set. Look
-     up your uid in roles/users/vars/user:your_username.yml in this repo, and
-     create your user with enough access to run ansible:
+  6. Log in as root on the console, using the temporary password you set.
+     Apply any pending syspatches:
+       syspatch
+
+  7. Look up your uid in roles/users/vars/user:your_username.yml in this repo,
+     and create your user with enough access to run ansible:
        useradd -mG wheel -u your_uid your_username
        echo permit nopass :wheel >/etc/doas.conf
 
-  7. Set a temporary password on your user:
+  8. Set a temporary password on your user:
        passwd your_username
 
      Then, log in over ssh, verifying the host key fingerprint by entering (on
      the console):
-       ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key
+       ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key
 
      Immediately set the root password to the (randomly generated) permanent
      one now that you can easily copy and paste it:
@@ -70,30 +73,36 @@ installation process.
 
      (The means of recording passwords is outside the scope of this document.)
 
-  8. Install Python (ansible's only prerequisite):
+  9. Install Python (ansible's only prerequisite):
        doas pkg_add python%3
 
      If there are multiple version options, you should generally select the
-     newest one.
+     default one. (TODO: How does one determine the default?)
 
-  9. Run ansible by invoking (in this repository):
-       make hostname
+  10. Create an SSH key for syncing TLS keys:
+        ssh-keygen -t ed25519 -f .ssh/id_ed25519.acme
 
-     Replacing `hostname` with the hostname of the machine, of course.
-     Optionally, you can copy your ssh key to the machine first. In any case,
-     ansible will ensure that your ssh key is present and that your user has
-     no password.
+      Configure palpatine (legacy server) to accept this key. This is
+      undocumented; ask xasop.
 
- 10. Configure palpatine (legacy server that performs DKIM signing) to permit
+  10. Run ansible by invoking (in this repository):
+        make hostname
+
+      Replacing `hostname` with the hostname of the machine, of course.
+      Optionally, you can copy your ssh key to the machine first. In any case,
+      ansible will ensure that your ssh key is present and that your user has
+      no password.
+
+ 11. Configure palpatine (legacy server that performs DKIM signing) to permit
      the new host to relay mail. Depending on the host's role, there may be
      other access required as well.
 
      This is undocumented and you very likely do not have the necessary
-     permissions to do it. If you are not Parsifal, simply ask Parsifal.
+     permissions to do it. If you are not xasop, simply ask xasop.
 
- 11. Re-run ansible to confirm that it believes the state of the host is
+ 12. Re-run ansible to confirm that it believes the state of the host is
      consistent. That is, the play recap should indicate that all actions are
      either ok (no change) or skipped (not applicable to this host).
 
- 12. Reboot the host to apply any boot-time configuration that ansible
+ 13. Reboot the host to apply any boot-time configuration that ansible
      installed.

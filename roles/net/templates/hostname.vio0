@@ -1,4 +1,2 @@
-{% if ansible_nodename in groups["dhcp"] %}
-dhcp
-{% endif %}
-inet6 autoconf -autoconfprivacy -soii
+inet autoconf
+inet6 autoconf -temporary -soii

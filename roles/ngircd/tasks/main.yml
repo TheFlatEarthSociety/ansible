@@ -1,3 +1,3 @@
 ---
-- include: ngircd.yml
-- include: relayd.yml
+- include_tasks: ngircd.yml
+- include_tasks: relayd.yml

@@ -7,27 +7,8 @@
     group: wheel
     mode: 0440
 
-- name: /etc/resolv.conf
-  copy:
-    src: resolv.conf
-    dest: /etc/resolv.conf
-    owner: root
-    group: wheel
-    mode: 0444
-  when: "ansible_nodename not in groups['dhcp']"
-
-- name: /etc/resolv.conf.tail
-  copy:
-    src: resolv.conf.tail
-    dest: /etc/resolv.conf.tail
-    owner: root
-    group: wheel
-    mode: 0444
-  when: "ansible_nodename in groups['dhcp']"
-
-- name: Remove /etc/resolv.conf.tail
-  file:
-    path: /etc/resolv.conf.tail
-    state: absent
-    follow: no
-  when: "ansible_nodename not in groups['dhcp']"
+- name: /etc/resolv.conf family
+  lineinfile:
+    path: /etc/resolv.conf
+    regexp: '^family '
+    line: "family inet6 inet4"

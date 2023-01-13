@@ -4,7 +4,7 @@ set -e
 umask 077
 
 tmpf="$(mktemp)"
-ssh -nTi /root/.ssh/id_rsa.acme palpatine.tfes.org >"$tmpf"
+ssh -nTi /root/.ssh/id_ed25519.acme palpatine.tfes.org >"$tmpf"
 
 cd /etc/ngircd/
 sed -n '/-----BEGIN PRIVATE KEY-----/q;p' "$tmpf" >server-cert.pem.new
