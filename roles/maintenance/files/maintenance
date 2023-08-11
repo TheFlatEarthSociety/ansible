@@ -8,9 +8,20 @@ done
 # Get PKG_PATH.
 . /etc/profile
 
+t="$(mktemp -dt maintenance.XXXXXXXXXX)" || exit 1
+{ syspatch -l; pkg_info; } >"$t"/before
+
 syspatch
 pkg_add -u
 
-# Always reboot, whether or not we installed updates. This sets the correct user
-# expectation, and makes sure we know if a reboot would break anything.
-shutdown -r +1 'Automated maintenance. To cancel: doas pkill shutdown'
+{ syspatch -l; pkg_info; } >"$t"/after
+
+if [ -s "$t"/before ] && cmp -s "$t"/before "$t"/after; then
+	# No updates; nothing to do.
+	:
+else
+	# Reboot into the updated system.
+	shutdown -r +1 'Automated maintenance. To cancel: doas pkill shutdown'
+fi
+
+rm -r "$t"
