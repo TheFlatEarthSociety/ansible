@@ -26,3 +26,5 @@ mv server-cert.pem.new server-cert.pem
 
 [ ! -f server-key.pem ] || mv -f server-key.pem server-key.pem.old
 mv server-key.pem.new server-key.pem
+
+rcctl reload ngircd
