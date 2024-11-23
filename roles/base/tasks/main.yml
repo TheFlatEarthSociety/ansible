@@ -2,7 +2,7 @@
 - name: Fail on unsupported OS version
   fail:
     msg: "{{ ansible_distribution }} {{ ansible_distribution_version }} is unsupported"
-  when: ansible_distribution != "OpenBSD" or ansible_distribution_version != "7.3"
+  when: ansible_distribution != "OpenBSD" or ansible_distribution_version != "7.4"
 
 - name: Set OS version short fact
   set_fact:

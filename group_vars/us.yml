@@ -1,3 +1,3 @@
 ---
 # This mirror must support IPv6.
-mirror: https://openbsd.mirror.constant.com/pub/OpenBSD
+mirror: https://mirrors.gigenet.com/pub/OpenBSD
